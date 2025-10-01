@@ -1,4 +1,5 @@
-﻿using UsersApplication.Models;
+﻿using UsersApplication.Helpers;
+using UsersApplication.Models;
 using UsersApplication.Models.Users;
 using UsersApplication.Repository.Interfaces;
 using UsersApplication.Services.Interfaces;
@@ -16,7 +17,7 @@ namespace UsersApplication.Services
 
         public async Task<ResponseActions<int>> Insert(UserInsertRequest user)
         {
-            //Hash password here!!!!
+            user.Password = Encrypt.HashPassword(user.Password);
             return await usersRepository.Insert(user);
         }
 
