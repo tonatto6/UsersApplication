@@ -2,5 +2,6 @@
 {
     public interface IUsersServices
     {
+        Task<dynamic> Seek(int idUser);
     }
 }

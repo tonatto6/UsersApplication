@@ -1,14 +1,23 @@
-﻿using UsersApplication.Repository.Interfaces;
+﻿using Dapper;
+using System.Data;
+using System.Data.SqlClient;
+using UsersApplication.ConnectionFactory;
+using UsersApplication.Repository.Interfaces;
 
 namespace UsersApplication.Repository
 {
     public class UsersRepository : IUsersRepository
     {
-        public Task<dynamic> SeekAll()
+        public async Task<dynamic> Seek(int idUser)
         {
-            string connectionString = "";
+            var parameters = new DynamicParameters();
+            parameters.Add("@IdUser", idUser, DbType.Int32, ParameterDirection.Input);
 
-            throw new NotImplementedException();
+            using (var conexion = ConnectionFactory.ConnectionFactory.GetConnection)
+            {
+                return await conexion.QueryFirstAsync<dynamic>("usp_Users_Seek",
+                                            parameters, null, null, CommandType.StoredProcedure);
+            }
         }
     }
 }

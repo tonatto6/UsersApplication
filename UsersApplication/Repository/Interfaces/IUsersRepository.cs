@@ -2,6 +2,6 @@
 {
     public interface IUsersRepository
     {
-        Task<dynamic> SeekAll();
+        Task<dynamic> Seek(int idUser);
     }
 }
