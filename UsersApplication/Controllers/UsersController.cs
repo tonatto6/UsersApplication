@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UsersApplication.Models;
+using UsersApplication.Models.Users;
 using UsersApplication.Services.Interfaces;
 
 namespace UsersApplication.Controllers
@@ -29,8 +30,21 @@ namespace UsersApplication.Controllers
             {
                 return StatusCode(ex.StatusCode, ex.Error);
             }
-
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Insert([FromBody]UserInsertRequest user)
+        {
+            try
+            {
+                var result = await usersServices.Insert(user);
+
+                return Ok(result);
+            }
+            catch (CustomException ex)
+            {
+                return StatusCode(ex.StatusCode, ex.Error);
+            }
+        }
     }
 }
