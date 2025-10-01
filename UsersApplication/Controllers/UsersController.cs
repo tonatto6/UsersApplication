@@ -31,5 +31,21 @@ namespace UsersApplication.Controllers
             }
 
         }
+
+        [HttpGet("{idUser}/v2")]
+        public async Task<IActionResult> Getv2(int idUser)
+        {
+            try
+            {
+                var result = await usersServices.Seek(idUser);
+
+                return Ok(result);
+            }
+            catch (CustomException ex)
+            {
+                return StatusCode(ex.StatusCode, ex.Error);
+            }
+
+        }
     }
 }
