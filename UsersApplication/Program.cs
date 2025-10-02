@@ -24,8 +24,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = "yourdomain.com",
-            ValidAudience = "yourdomain.com",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("usersapplicationrepo202502102025"))
         };
     });
