@@ -26,10 +26,13 @@ namespace UsersApplication.Services
             return await usersRepository.Seek(idUser); 
         }
 
-        public async Task<bool> ValidatePassword(UsersLoginRequest user)
+        public async Task<string> ValidatePassword(UsersLoginRequest user)
         {
             var hashPass = await usersRepository.SeekPassword(user);
-            return Encrypt.VerifyPassword(user.Password, hashPass);
+
+            return Authorization.GenerateJwtToken(user.Username, hashPass);
+
+            //return Encrypt.VerifyPassword(user.Password, hashPass);
         }
     }
 }

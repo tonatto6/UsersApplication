@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UsersApplication.Models;
 using UsersApplication.Models.Users;
@@ -18,6 +19,7 @@ namespace UsersApplication.Controllers
         }
 
         [HttpGet("{idUser}")]
+        [Authorize]
         public async Task<IActionResult> Get(int idUser)
         {
             try
@@ -34,6 +36,7 @@ namespace UsersApplication.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Insert([FromBody]UserInsertRequest user)
         {
             try
