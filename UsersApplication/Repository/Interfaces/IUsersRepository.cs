@@ -7,5 +7,6 @@ namespace UsersApplication.Repository.Interfaces
     {
         Task<dynamic> Seek(int idUser);
         Task<ResponseActions<int>> Insert(UserInsertRequest user);
+        Task<string> SeekPassword(UsersLoginRequest user);
     }
 }

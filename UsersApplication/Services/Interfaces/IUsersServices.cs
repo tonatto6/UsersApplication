@@ -7,5 +7,6 @@ namespace UsersApplication.Services.Interfaces
     {
         Task<dynamic> Seek(int idUser);
         Task<ResponseActions<int>> Insert(UserInsertRequest user);
+        Task<bool> ValidatePassword(UsersLoginRequest user);
     }
 }

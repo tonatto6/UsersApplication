@@ -25,5 +25,11 @@ namespace UsersApplication.Services
         {
             return await usersRepository.Seek(idUser); 
         }
+
+        public async Task<bool> ValidatePassword(UsersLoginRequest user)
+        {
+            var hashPass = await usersRepository.SeekPassword(user);
+            return Encrypt.VerifyPassword(user.Password, hashPass);
+        }
     }
 }

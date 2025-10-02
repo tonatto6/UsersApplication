@@ -24,11 +24,12 @@ namespace UsersApplication.Controllers
             {
                 var result = await usersServices.Seek(idUser);
 
-                return Ok(result);
+                return Ok(new Response(200, false, result));
             }
             catch (CustomException ex)
             {
-                return StatusCode(ex.StatusCode, ex.Error);
+                var response = new Response(ex.StatusCode, true, ex.Error);
+                return StatusCode(response.StatusCode, response);
             }
         }
 
@@ -39,11 +40,28 @@ namespace UsersApplication.Controllers
             {
                 var result = await usersServices.Insert(user);
 
-                return Ok(result);
+                return Ok(new Response(200, false, result));
             }
             catch (CustomException ex)
             {
-                return StatusCode(ex.StatusCode, ex.Error);
+                var response = new Response(ex.StatusCode, true, ex.Error);
+                return StatusCode(response.StatusCode, response);
+            }
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] UsersLoginRequest user)
+        {
+            try
+            {
+                var result = await usersServices.ValidatePassword(user);
+
+                return Ok(new Response(200,false,result));
+            }
+            catch (CustomException ex)
+            {
+                var response = new Response(ex.StatusCode, true, ex.Error);
+                return StatusCode(response.StatusCode, response);
             }
         }
     }
