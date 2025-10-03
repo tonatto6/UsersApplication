@@ -1,11 +1,14 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using UsersApplication.Helpers;
 using UsersApplication.IoC;
+using UsersApplication.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddDependency(builder.Configuration);
 
 builder.Services.AddSwaggerGen(options =>
@@ -14,6 +17,19 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddControllers();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+        policy =>
+        {
+            policy
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowCredentials()
+                .SetIsOriginAllowed(_ => true); 
+        });
+});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -28,7 +44,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+
 builder.Services.AddAuthorization();
+
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -44,9 +63,13 @@ app.UseStaticFiles();
 
 app.MapControllers();
 
+app.UseCors(MyAllowSpecificOrigins);
+
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

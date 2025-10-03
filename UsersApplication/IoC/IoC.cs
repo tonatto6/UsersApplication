@@ -1,4 +1,5 @@
-﻿using UsersApplication.Repository;
+﻿using Microsoft.AspNetCore.SignalR;
+using UsersApplication.Repository;
 using UsersApplication.Repository.Interfaces;
 using UsersApplication.Services;
 using UsersApplication.Services.Interfaces;

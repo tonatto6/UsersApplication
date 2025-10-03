@@ -1,4 +1,5 @@
-﻿using UsersApplication.Helpers;
+﻿using Microsoft.AspNetCore.SignalR;
+using UsersApplication.Helpers;
 using UsersApplication.Models;
 using UsersApplication.Models.Users;
 using UsersApplication.Repository.Interfaces;
@@ -9,10 +10,12 @@ namespace UsersApplication.Services
     public class UsersServices : IUsersServices
     {
         private readonly IUsersRepository usersRepository;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public UsersServices(IUsersRepository usersRepository)
+        public UsersServices(IUsersRepository usersRepository, IHubContext<ChatHub> hubContext)
         {
             this.usersRepository = usersRepository;
+            this._hubContext = hubContext;
         }
 
         public async Task<ResponseActions<int>> Insert(UserInsertRequest user)
@@ -28,7 +31,10 @@ namespace UsersApplication.Services
 
         public async Task<ResponseActions<int>> SendMessage(string username, UsersSendMessageRequest userMessage)
         {
-            return await usersRepository.SendMessage(username, userMessage);
+            var resp = await usersRepository.SendMessage(username, userMessage);
+
+            await _hubContext.Clients.All.SendAsync("ReceiveMessage", username, userMessage.Message);
+            return resp;
         }
 
         public async Task<string> ValidatePassword(UsersLoginRequest user)
