@@ -26,6 +26,11 @@ namespace UsersApplication.Services
             return await usersRepository.Seek(idUser); 
         }
 
+        public async Task<ResponseActions<int>> SendMessage(string username, UsersSendMessageRequest userMessage)
+        {
+            return await usersRepository.SendMessage(username, userMessage);
+        }
+
         public async Task<string> ValidatePassword(UsersLoginRequest user)
         {
             var hashPass = await usersRepository.SeekPassword(user);

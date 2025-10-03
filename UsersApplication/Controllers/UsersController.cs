@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using UsersApplication.Helpers;
 using UsersApplication.Models;
 using UsersApplication.Models.Users;
 using UsersApplication.Services.Interfaces;
@@ -60,6 +62,24 @@ namespace UsersApplication.Controllers
                 var result = await usersServices.ValidatePassword(user);
 
                 return Ok(new Response(200,false,result));
+            }
+            catch (CustomException ex)
+            {
+                var response = new Response(ex.StatusCode, true, ex.Error);
+                return StatusCode(response.StatusCode, response);
+            }
+        }
+
+        [HttpPost("sendMessage")]
+        [Authorize]
+        public async Task<IActionResult> SendMessage([FromBody] UsersSendMessageRequest userMessage)
+        {
+            try
+            {
+                string username = GetClaims.GetClaimUsername(User);
+                var result = await usersServices.SendMessage(username,userMessage);
+
+                return Ok(new Response(200, false, result));
             }
             catch (CustomException ex)
             {

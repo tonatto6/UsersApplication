@@ -82,5 +82,30 @@ namespace UsersApplication.Repository
             }
            
         }
+
+        public async Task<ResponseActions<int>> SendMessage(string username,UsersSendMessageRequest userMessage)
+        {
+            try
+            {
+                var parameters = new DynamicParameters();
+                parameters.Add("@Username", username, DbType.String, ParameterDirection.Input);
+                parameters.Add("@UsernameReceiver", userMessage.UsernameReceiver, DbType.String, ParameterDirection.Input);
+                parameters.Add("@Messages", userMessage.Message, DbType.String, ParameterDirection.Input);
+
+                using (var conexion = ConnectionFactory.ConnectionFactory.GetConnection)
+                {
+                    return await conexion.QueryFirstAsync<ResponseActions<int>>("usp_UsersMessages_Send",
+                                                parameters, null, null, CommandType.StoredProcedure);
+                }
+            }
+            catch (SqlException sqlEx)
+            {
+                throw new CustomException(sqlEx);
+            }
+            catch (Exception ex)
+            {
+                throw new CustomException(422, ex.Message);
+            }
+        }
     }
 }
